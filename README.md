@@ -1,4 +1,4 @@
-# gonvutils  [![Go Report Card](https://goreportcard.com/badge/github.com/lalabuy948/gonvutils)](https://goreportcard.com/report/github.com/lalabuy948/gonvutils) [![Coverage Status](https://coveralls.io/repos/github.com/lalabuy948/gonvutils/badge.svg?branch=master)]
+# gonvutils  [![Go Report Card](https://goreportcard.com/badge/github.com/lalabuy948/gonvutils)](https://goreportcard.com/report/github.com/lalabuy948/gonvutils) 
 
 > Package gonvutils provides useful environment operations
 
