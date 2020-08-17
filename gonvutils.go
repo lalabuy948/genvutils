@@ -1,7 +1,12 @@
 // Package genvutils provides useful environment operations
 package genvutils
 
-import "os"
+import (
+	"fmt"
+	"os"
+	"reflect"
+	"strings"
+)
 
 //IsProduction checks if ENVIRONMENT value is equal to "PROD".
 func IsProduction() bool {
@@ -60,4 +65,25 @@ func GetEnv(key string, fallback string) string {
 		return value
 	}
 	return fallback
+}
+
+func Parse(i interface{}) interface{} {
+	t := reflect.TypeOf(i)
+
+	fmt.Println("Type:", t.Name())
+	fmt.Println("Kind:", t.Kind())
+
+	for i := 0; i < t.NumField(); i++ {
+		field := t.Field(i)
+
+		tag := field.Tag.Get("genv")
+		tagS := strings.Split(tag, ",")
+		tagName := tagS[0]
+		defValue := tagS[1]
+
+		fmt.Printf("envkey: %v defvalue: %v \n", tagName, defValue)
+		fmt.Printf("%d. %v (%v), tag: '%v'\n", i+1, field.Name, field.Type.Name(), tag)
+	}
+
+	return t
 }

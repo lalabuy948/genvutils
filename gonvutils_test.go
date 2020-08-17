@@ -142,3 +142,13 @@ func TestGetEnv(t *testing.T) {
 
 	os.Unsetenv("SERVER_PORT")
 }
+
+func TestParse(t *testing.T) {
+	type config struct {
+		ServerPort string `genv:"SERVER_PORT,8080"`
+	}
+
+	cfg := config{ServerPort: "8081"}
+
+	Parse(cfg)
+}
