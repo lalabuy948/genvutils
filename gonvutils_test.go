@@ -1,4 +1,4 @@
-package gonvutils
+package genvutils
 
 import (
 	"os"

@@ -1,5 +1,5 @@
-// Package gonvutils provides useful environment operations
-package gonvutils
+// Package genvutils provides useful environment operations
+package genvutils
 
 import "os"
 

@@ -1,6 +1,6 @@
-# gonvutils  [![Go Report Card](https://goreportcard.com/badge/github.com/lalabuy948/gonvutils)](https://goreportcard.com/report/github.com/lalabuy948/gonvutils)  [![Build Status](https://github.com/lalabuy948/gonvutils/workflows/build/badge.svg)](https://github.com/lalabuy948/gonvutils/actions)
+# genvutils  [![Go Report Card](https://goreportcard.com/badge/github.com/lalabuy948/gonvutils)](https://goreportcard.com/report/github.com/lalabuy948/gonvutils)  [![Build Status](https://github.com/lalabuy948/gonvutils/workflows/build/badge.svg)](https://github.com/lalabuy948/gonvutils/actions)
 
-> Package gonvutils provides useful environment operations
+> Package genvutils provides useful environment operations
 
 ## Funcs
 
@@ -9,4 +9,4 @@
 
 ## Install
 
-go get -u github.com/lalabuy948/gonvutils
+`go get -u github.com/lalabuy948/genvutils`
