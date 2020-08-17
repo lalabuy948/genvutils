@@ -73,7 +73,7 @@ func GetEnv(key string, fallback string) string {
 //      MongoUrl   string `genv:"MONGO_URL,mongodb://localhost:27017"`
 //  }
 //
-// Here is an example of struct.
+// Here is an example of struct. Good reading https://github.com/a8m/reflect-examples
 func Parse(income interface{}) interface{} {
 	t := reflect.TypeOf(income).Elem()
 	v := reflect.ValueOf(income).Elem()
