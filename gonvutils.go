@@ -2,7 +2,6 @@
 package genvutils
 
 import (
-	"fmt"
 	"os"
 	"reflect"
 	"strings"
@@ -67,23 +66,32 @@ func GetEnv(key string, fallback string) string {
 	return fallback
 }
 
-func Parse(i interface{}) interface{} {
-	t := reflect.TypeOf(i)
-
-	fmt.Println("Type:", t.Name())
-	fmt.Println("Kind:", t.Kind())
+//Parse function will parse given pointer to struct and fill it with env values.
+//
+//  type serverConfig struct {
+//      ServerPort string `genv:"SERVER_PORT,8080"`
+//      MongoUrl   string `genv:"MONGO_URL,mongodb://localhost:27017"`
+//  }
+//
+// Here is an example of struct.
+func Parse(income interface{}) interface{} {
+	t := reflect.TypeOf(income).Elem()
+	v := reflect.ValueOf(income).Elem()
 
 	for i := 0; i < t.NumField(); i++ {
 		field := t.Field(i)
+		value := v.FieldByName(field.Name)
 
 		tag := field.Tag.Get("genv")
-		tagS := strings.Split(tag, ",")
-		tagName := tagS[0]
-		defValue := tagS[1]
+		tagS := strings.Split(tag, ",") // envKey, defValue
 
-		fmt.Printf("envkey: %v defvalue: %v \n", tagName, defValue)
-		fmt.Printf("%d. %v (%v), tag: '%v'\n", i+1, field.Name, field.Type.Name(), tag)
+		//@todo: Implement multiple types
+		switch len(tagS) {
+		case 1:
+			if value.CanSet() && value.IsValid() { value.SetString(strings.TrimSpace(GetEnv(tagS[0], ""))) }
+		case 2:
+			if value.CanSet() && value.IsValid() { value.SetString(strings.TrimSpace(GetEnv(tagS[0], tagS[1]))) }
+		}
 	}
-
-	return t
+	return income
 }

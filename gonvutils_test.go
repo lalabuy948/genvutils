@@ -144,11 +144,33 @@ func TestGetEnv(t *testing.T) {
 }
 
 func TestParse(t *testing.T) {
-	type config struct {
+
+	type serverConfig struct {
 		ServerPort string `genv:"SERVER_PORT,8080"`
+		MongoUrl   string `genv:"MONGO_URL,mongodb://localhost:27017"`
 	}
 
-	cfg := config{ServerPort: "8081"}
+	var srvConf serverConfig
+	Parse(&srvConf)
 
-	Parse(cfg)
+	if srvConf.ServerPort != "8080" {
+		t.Errorf("Parse(&srvConf) | ServerPort = %v; want 8080", srvConf.ServerPort)
+	}
+	if srvConf.MongoUrl != "mongodb://localhost:27017" {
+		t.Errorf("Parse(&srvConf) | MongoUrl = %v; want mongodb://localhost:27017", srvConf.MongoUrl)
+	}
+
+	os.Setenv("SERVER_PORT", "8181")
+	os.Setenv("MONGO_URL", "mongodb://localhost:76623")
+	Parse(&srvConf)
+
+	if srvConf.ServerPort != "8181" {
+		t.Errorf("Parse(&srvConf) | ServerPort = %v; want 8181", srvConf.ServerPort)
+	}
+	if srvConf.MongoUrl != "mongodb://localhost:76623" {
+		t.Errorf("Parse(&srvConf) | MongoUrl = %v; want mongodb://localhost:76623", srvConf.MongoUrl)
+	}
+
+	os.Unsetenv("SERVER_PORT")
+	os.Unsetenv("MONGO_URL")
 }
