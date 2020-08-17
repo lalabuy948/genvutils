@@ -11,6 +11,12 @@ func IsProduction() bool {
 	if os.Getenv("ENVIRONMENT") == "PRODUCTION" {
 		return true
 	}
+	if os.Getenv("APP_ENV") == "PROD" {
+		return true
+	}
+	if os.Getenv("APP_ENV") == "PRODUCTION" {
+		return true
+	}
 	return false
 }
 
@@ -22,6 +28,12 @@ func IsDevelopment() bool {
 	if os.Getenv("ENVIRONMENT") == "DEVELOPMENT" {
 		return true
 	}
+	if os.Getenv("APP_ENV") == "DEV" {
+		return true
+	}
+	if os.Getenv("APP_ENV") == "DEVELOPMENT" {
+		return true
+	}
 	return false
 }
 
@@ -31,6 +43,12 @@ func IsTesting() bool {
 		return true
 	}
 	if os.Getenv("ENVIRONMENT") == "TESTING" {
+		return true
+	}
+	if os.Getenv("APP_ENV") == "TEST" {
+		return true
+	}
+	if os.Getenv("APP_ENV") == "TESTING" {
 		return true
 	}
 	return false

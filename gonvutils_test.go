@@ -24,7 +24,26 @@ func TestIsProduction(t *testing.T) {
 		t.Errorf("IsProduction() = %v; want false", got)
 	}
 
+	os.Setenv("APP_ENV", "PROD")
+	got = IsProduction()
+	if got != true {
+		t.Errorf("IsProduction() = %v; want true", got)
+	}
+
+	os.Setenv("APP_ENV", "PRODUCTION")
+	got = IsProduction()
+	if got != true {
+		t.Errorf("IsProduction() = %v; want true", got)
+	}
+
+	os.Setenv("APP_ENV", "BLA")
+	got = IsProduction()
+	if got != false {
+		t.Errorf("IsProduction() = %v; want false", got)
+	}
+
 	os.Unsetenv("ENVIRONMENT")
+	os.Unsetenv("APP_ENV")
 }
 
 func TestIsDevelopment(t *testing.T) {
@@ -46,7 +65,26 @@ func TestIsDevelopment(t *testing.T) {
 		t.Errorf("IsDevelopment() = %v; want false", got)
 	}
 
+	os.Setenv("APP_ENV", "DEV")
+	got = IsDevelopment()
+	if got != true {
+		t.Errorf("IsDevelopment() = %v; want true", got)
+	}
+
+	os.Setenv("APP_ENV", "DEVELOPMENT")
+	got = IsDevelopment()
+	if got != true {
+		t.Errorf("IsDevelopment() = %v; want true", got)
+	}
+
+	os.Setenv("APP_ENV", "BLA")
+	got = IsDevelopment()
+	if got != false {
+		t.Errorf("IsDevelopment() = %v; want false", got)
+	}
+
 	os.Unsetenv("ENVIRONMENT")
+	os.Unsetenv("APP_ENV")
 }
 
 func TestIsTesting(t *testing.T) {
@@ -68,7 +106,26 @@ func TestIsTesting(t *testing.T) {
 		t.Errorf("IsTesting() = %v; want false", got)
 	}
 
+	os.Setenv("APP_ENV", "TEST")
+	got = IsTesting()
+	if got != true {
+		t.Errorf("IsTesting() = %v; want true", got)
+	}
+
+	os.Setenv("APP_ENV", "TESTING")
+	got = IsTesting()
+	if got != true {
+		t.Errorf("IsTesting() = %v; want true", got)
+	}
+
+	os.Setenv("APP_ENV", "BLA")
+	got = IsTesting()
+	if got != false {
+		t.Errorf("IsTesting() = %v; want false", got)
+	}
+
 	os.Unsetenv("ENVIRONMENT")
+	os.Unsetenv("APP_ENV")
 }
 
 func TestGetEnv(t *testing.T) {
