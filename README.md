@@ -1,4 +1,4 @@
-# genvutils  [![Go Report Card](https://goreportcard.com/badge/github.com/lalabuy948/gonvutils)](https://goreportcard.com/report/github.com/lalabuy948/gonvutils)  [![Build Status](https://github.com/lalabuy948/gonvutils/workflows/build/badge.svg)](https://github.com/lalabuy948/gonvutils/actions)
+# genvutils  [![Go Report Card](https://goreportcard.com/badge/github.com/lalabuy948/genvutils)](https://goreportcard.com/report/github.com/lalabuy948/genvutils)  [![Build Status](https://github.com/lalabuy948/genvutils/workflows/build/badge.svg)](https://github.com/lalabuy948/genvutils/actions)
 
 > Package genvutils provides useful environment operations
 
