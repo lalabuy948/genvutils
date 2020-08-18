@@ -163,7 +163,10 @@ func TestParse(t *testing.T) {
 	}
 
 	var srvConf serverConfig
-	Parse(&srvConf)
+	err := Parse(&srvConf)
+	if err != nil {
+		t.Errorf("Parse(&srvConf) | return %v;", err)
+	}
 	if srvConf.ServerPort != "8080" {
 		t.Errorf("Parse(&srvConf) | ServerPort = %v; want 8080", srvConf.ServerPort)
 	}
@@ -180,7 +183,10 @@ func TestParse(t *testing.T) {
 	os.Setenv("SERVER_PORT", "8181")
 	os.Setenv("MONGO_URL", "mongodb://localhost:76623")
 
-	Parse(&srvConf)
+	err = Parse(&srvConf)
+	if err != nil {
+		t.Errorf("Parse(&srvConf) | return %v;", err)
+	}
 	if srvConf.ServerPort != "8181" {
 		t.Errorf("Parse(&srvConf) | ServerPort = %v; want 8181", srvConf.ServerPort)
 	}
