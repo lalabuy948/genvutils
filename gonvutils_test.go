@@ -146,24 +146,41 @@ func TestGetEnv(t *testing.T) {
 func TestParse(t *testing.T) {
 
 	type serverConfig struct {
+		// simple test
 		ServerPort string `genv:"SERVER_PORT,8080"`
 		MongoUrl   string `genv:"MONGO_URL,mongodb://localhost:27017"`
+
+		// string join test
+		MongoClusterUrl string `genv:"MONGO_URL,mongodb://mongodb,mongodb1,mongodb2/?replicaSet=rs0"`
+
+		// edge cases
+		RedisUrl   string `genv:""`
+		RedisPort  int    `genv:"REDIS_PORT, 6371"`
+		Compress   bool   `genv:"COMPRES, true"`
+
+		// empty
+		Bla        bool
 	}
 
 	var srvConf serverConfig
 	Parse(&srvConf)
-
 	if srvConf.ServerPort != "8080" {
 		t.Errorf("Parse(&srvConf) | ServerPort = %v; want 8080", srvConf.ServerPort)
 	}
 	if srvConf.MongoUrl != "mongodb://localhost:27017" {
 		t.Errorf("Parse(&srvConf) | MongoUrl = %v; want mongodb://localhost:27017", srvConf.MongoUrl)
 	}
+	if srvConf.RedisPort != 6371 {
+		t.Errorf("Parse(&srvConf) | RedisPort = %v; want 6371 as int", srvConf.RedisPort)
+	}
+	if srvConf.Compress != true {
+		t.Errorf("Parse(&srvConf) | Compress = %v; want true", srvConf.Compress)
+	}
 
 	os.Setenv("SERVER_PORT", "8181")
 	os.Setenv("MONGO_URL", "mongodb://localhost:76623")
-	Parse(&srvConf)
 
+	Parse(&srvConf)
 	if srvConf.ServerPort != "8181" {
 		t.Errorf("Parse(&srvConf) | ServerPort = %v; want 8181", srvConf.ServerPort)
 	}
