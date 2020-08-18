@@ -5,8 +5,8 @@
 ## Funcs
 
 - `IsProduction`, `IsDevelopment` and `IsTesting` checks for `ENVIRONMENT` dot env value.
-- `GetEnv` gets env value, fallback as second function argument.
-- `Parse` will fill given struct with env values or with fallbacks.
+- `GetEnv` gets env value or fallback which goes as second function argument.
+- `Parse` will fill given struct with env values or with fallbacks. (see examples folder)
 ```go
 	type serverConfig struct {
 		ServerPort string `genv:"SERVER_PORT,8080"`
