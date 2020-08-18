@@ -6,6 +6,13 @@
 
 - `IsProduction`, `IsDevelopment` and `IsTesting` checks for `ENVIRONMENT` dot env value.
 - `GetEnv` gets env value, fallback as second function argument.
+- `Parse` will fill given struct with env values or with fallbacks.
+```go
+	type serverConfig struct {
+		ServerPort string `genv:"SERVER_PORT,8080"`
+		MongoUrl   string `genv:"MONGO_URL,mongodb://localhost:27017"`
+	}
+```
 
 ## Install
 

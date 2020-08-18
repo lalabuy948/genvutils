@@ -1,7 +1,12 @@
 // Package genvutils provides useful environment operations
 package genvutils
 
-import "os"
+import (
+	"os"
+	"reflect"
+	"strconv"
+	"strings"
+)
 
 //IsProduction checks if ENVIRONMENT value is equal to "PROD".
 func IsProduction() bool {
@@ -60,4 +65,52 @@ func GetEnv(key string, fallback string) string {
 		return value
 	}
 	return fallback
+}
+
+//Parse function will parse given pointer to struct and fill it with env values.
+//
+//  type serverConfig struct {
+//      ServerPort string `genv:"SERVER_PORT,8080"`
+//      MongoUrl   string `genv:"MONGO_URL,mongodb://localhost:27017"`
+//  }
+//
+// Here is an example of struct. Good reading about reflect https://github.com/a8m/reflect-examples
+func Parse(income interface{}) error {
+	t := reflect.TypeOf(income).Elem()
+	v := reflect.ValueOf(income).Elem()
+
+	for i := 0; i < t.NumField(); i++ {
+		field := t.Field(i)
+		value := v.FieldByName(field.Name)
+
+		tag := field.Tag.Get("genv")
+		tagS := strings.Split(tag, ",")
+
+		if value.CanSet() && value.IsValid() {
+			switch len(tagS) {
+			case 0:
+				break
+			default:
+				envVarValue := strings.TrimSpace(GetEnv(tagS[0], strings.Join(tagS[1:], ",")))
+				switch value.Kind() {
+				case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+					envVarValueF, _ := strconv.ParseInt(envVarValue, 10, 64)
+					value.SetInt(envVarValueF)
+				case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+					envVarValueF, _ := strconv.ParseUint(envVarValue, 10, 64)
+					value.SetUint(envVarValueF)
+				case reflect.Float32, reflect.Float64:
+					envVarValueF, _ := strconv.ParseFloat(envVarValue, 64)
+					value.SetFloat(envVarValueF)
+				case reflect.String:
+					value.SetString(envVarValue)
+				case reflect.Bool:
+					envVarValueF, _ := strconv.ParseBool(envVarValue)
+					value.SetBool(envVarValueF)
+				}
+			}
+		}
+	}
+
+	return nil
 }
