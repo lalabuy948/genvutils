@@ -200,14 +200,16 @@ func TestParse(t *testing.T) {
 }
 
 func TestLoad(t *testing.T) {
-	err := Load()
-	if err != nil && err != ErrDotenvNotFound {
-			t.Errorf("Load() | error %v;", err)
+	if err := Load(); err != ErrDotenvNotFound {
+		t.Errorf("Load() | error %v;", err)
 	}
 
-	err = ioutil.WriteFile(".env", []byte(`
+	err := ioutil.WriteFile(".env", []byte(`
 BLA_BLA=42
 # some comment`), 0755)
+	if err != nil {
+		t.Errorf("ioutil.WriteFile | error %v;", err)
+	}
 	err = Load(".env")
 	if err != nil {
 		t.Errorf("Load() | error %v;", err)
@@ -225,6 +227,9 @@ BLA_BLA=42
 # some comment
 BLO_BLO=42
 # another one`), 0755)
+	if err != nil {
+		t.Errorf("ioutil.WriteFile | error %v;", err)
+	}
 	err = Load(".env.development")
 	if err != nil {
 		t.Errorf("Load(.env.development) | error %v;", err)
@@ -242,6 +247,9 @@ BLO_BLO=42
 # some comment
 BLU_BLU=42
 # another one`), 0755)
+	if err != nil {
+		t.Errorf("ioutil.WriteFile | error %v;", err)
+	}
 	err = Load(".env.test.local")
 	if err != nil {
 		t.Errorf("Load(.env.test.local) | error %v;", err)
@@ -256,7 +264,13 @@ BLU_BLU=42
 	}
 
 	err = os.Remove(".env")
+	if err != nil {
+		t.Errorf("os.Remove | error %v;", err)
+	}
 	err = os.Remove(".env.development")
+	if err != nil {
+		t.Errorf("os.Remove | error %v;", err)
+	}
 	err = os.Remove(".env.test.local")
 	if err != nil {
 		t.Errorf("os.Remove(.env) | error %v;", err)
@@ -281,7 +295,13 @@ func TestGetFromPriorityList(t *testing.T) {
 	}
 
 	err = ioutil.WriteFile(".env", []byte(``), 0755)
+	if err != nil {
+		t.Errorf("ioutil.WriteFile | error %v;", err)
+	}
 	err = ioutil.WriteFile(".env.local", []byte(``), 0755)
+	if err != nil {
+		t.Errorf("ioutil.WriteFile | error %v;", err)
+	}
 	err = ioutil.WriteFile(".env.production", []byte(``), 0755)
 	if err != nil {
 		t.Errorf("ioutil.WriteFile | error %v;", err)
@@ -290,8 +310,20 @@ func TestGetFromPriorityList(t *testing.T) {
 	if got != ".env.production" {
 		t.Errorf("getFromPriorityList() = %v; want .env.production", got)
 	}
+	if err != nil {
+		t.Errorf("getFromPriorityList() | error %v;", err)
+	}
 
 	err = os.Remove(".env")
+	if err != nil {
+		t.Errorf("os.Remove(.env) | error %v;", err)
+	}
 	err = os.Remove(".env.local")
+	if err != nil {
+		t.Errorf("os.Remove(.env.local) | error %v;", err)
+	}
 	err = os.Remove(".env.production")
+	if err != nil {
+		t.Errorf("os.Remove(.env.production) | error %v;", err)
+	}
 }
