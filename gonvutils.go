@@ -221,7 +221,7 @@ func isComment(line string) bool {
 }
 
 func parseLine(fullLine string) (string, string) {
-	// todo: handle comments after value
+	fullLine = strings.Split(fullLine, "#")[0]
 	fullLineSplit := strings.Split(fullLine, "=")
 	return strings.TrimSpace(fullLineSplit[0]), strings.TrimSpace(strings.Join(fullLineSplit[1:], ","))
 }

@@ -245,8 +245,7 @@ BLO_BLO=42
 
 	err = ioutil.WriteFile(".env.test.local", []byte(`
 # some comment
-BLU_BLU=42
-# another one`), 0755)
+BLU_BLU=42 # tricky`), 0755)
 	if err != nil {
 		t.Errorf("ioutil.WriteFile | error %v;", err)
 	}
