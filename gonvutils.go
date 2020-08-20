@@ -123,14 +123,14 @@ func Parse(income interface{}) error {
 // !!! It will not override already set variables.
 //
 // Priority list is next (top -> bottom):
-// .env.production.local`
-// .env.test.local`
-// .env.development.local`
-// .env.production`
-// .env.test`
-// .env.development`
-// .env.local`
-// .env`
+//.env.production.local`
+//.env.test.local`
+//.env.development.local`
+//.env.production`
+//.env.test`
+//.env.development`
+//.env.local`
+//.env`
 func Load(filenames ...string) error {
 	if len(filenames) == 0 {
 		envFileName, err := getFromPriorityList()
