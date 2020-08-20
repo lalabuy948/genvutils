@@ -2,6 +2,8 @@
 package genvutils
 
 import (
+	"bufio"
+	"errors"
 	"os"
 	"reflect"
 	"strconv"
@@ -113,4 +115,113 @@ func Parse(income interface{}) error {
 	}
 
 	return nil
+}
+
+//Load function is going to parse given dot environment file or chose one
+// from priority list and set environment variables.
+//
+// !!! It will not override already set variables.
+//
+// Priority list is next (top -> bottom):
+// .env.production.local`
+// .env.test.local`
+// .env.development.local`
+// .env.production`
+// .env.test`
+// .env.development`
+// .env.local`
+// .env`
+func Load(filenames ...string) error {
+	if len(filenames) == 0 {
+		envFileName, err := getFromPriorityList()
+		if err != nil {
+			return err
+		}
+		filenames = append(filenames, envFileName)
+	}
+	for _, filename := range filenames {
+		envMap, err := parseDotEnvFile(filename)
+		if err != nil {
+			return err
+		}
+		for k, v := range envMap {
+			if os.Getenv(k) == "" {
+				err := os.Setenv(k,v)
+				if err != nil {
+					return err
+				}
+			}
+		}
+	}
+	return nil
+}
+
+func fileExists(name string) bool {
+	info, err := os.Stat(name)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
+}
+
+var ErrDotenvNotFound = errors.New("genvutils: dotenv file not found")
+
+func getFromPriorityList() (string, error) {
+	priorityList := []string{
+		".env.production.local",
+		".env.test.local",
+		".env.development.local",
+		".env.production",
+		".env.test",
+		".env.development",
+		".env.local",
+		".env",
+	}
+	for _, envFile := range priorityList {
+		if fileExists(envFile) {
+			return envFile, nil
+		}
+	}
+	return "", ErrDotenvNotFound
+}
+
+func parseDotEnvFile(filename string) (map[string]string, error) {
+	if !fileExists(filename) {
+		return nil, ErrDotenvNotFound
+	}
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	envMap := make(map[string]string)
+
+	var lines []string
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	if err := scanner.Err(); err != nil {
+		return nil, err
+	}
+	for _, fullLine := range lines {
+		if !isComment(fullLine) {
+			key, value := parseLine(fullLine)
+			if key != "" && value != "" { //skip empty lines
+				envMap[key] = value
+			}
+		}
+	}
+	return envMap, nil
+}
+
+func isComment(line string) bool {
+	return strings.HasPrefix(line, "#")
+}
+
+func parseLine(fullLine string) (string, string) {
+	// todo: handle comments after value
+	fullLineSplit := strings.Split(fullLine, "=")
+	return strings.TrimSpace(fullLineSplit[0]), strings.TrimSpace(strings.Join(fullLineSplit[1:], ","))
 }

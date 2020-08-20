@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/lalabuy948/genvutils"
+	"log"
 )
 
 type config struct {
@@ -10,10 +11,18 @@ type config struct {
 }
 
 func main()  {
+	// load dotenv file
+	err := genvutils.Load()
+	if err != genvutils.ErrDotenvNotFound {
+		log.Fatal(err)
+	}
+
+	// check if development for some reason ¯\_(ツ)_/¯
 	if genvutils.IsDevelopment() {
 		fmt.Println("This will be executed if development")
 	}
 
+	// dump env variables to your struct
 	var cfg config
 	genvutils.Parse(&cfg)
 
