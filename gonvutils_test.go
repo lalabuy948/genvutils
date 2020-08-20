@@ -148,18 +148,18 @@ func TestParse(t *testing.T) {
 	type serverConfig struct {
 		// simple test
 		ServerPort string `genv:"SERVER_PORT,8080"`
-		MongoUrl   string `genv:"MONGO_URL,mongodb://localhost:27017"`
+		MongoURL   string `genv:"MONGO_URL, mongodb://localhost:27017"`
 
 		// string join test
-		MongoClusterUrl string `genv:"MONGO_URL,mongodb://mongodb,mongodb1,mongodb2/?replicaSet=rs0"`
+		MongoClusterURL string `genv:"MONGO_URL,mongodb://mongodb,mongodb1,mongodb2/?replicaSet=rs0"`
 
 		// edge cases
-		RedisUrl   string `genv:""`
-		RedisPort  int    `genv:"REDIS_PORT, 6371"`
-		Compress   bool   `genv:"COMPRES, true"`
+		RedisURL  string `genv:""`
+		RedisPort int    `genv:"REDIS_PORT, 6371"`
+		Compress  bool   `genv:"COMPRES, true"`
 
 		// empty
-		Bla        bool
+		Bla bool
 	}
 
 	var srvConf serverConfig
@@ -170,8 +170,11 @@ func TestParse(t *testing.T) {
 	if srvConf.ServerPort != "8080" {
 		t.Errorf("Parse(&srvConf) | ServerPort = %v; want 8080", srvConf.ServerPort)
 	}
-	if srvConf.MongoUrl != "mongodb://localhost:27017" {
-		t.Errorf("Parse(&srvConf) | MongoUrl = %v; want mongodb://localhost:27017", srvConf.MongoUrl)
+	if srvConf.MongoURL != "mongodb://localhost:27017" {
+		t.Errorf("Parse(&srvConf) | MongoURL = %v; want mongodb://localhost:27017", srvConf.MongoURL)
+	}
+	if srvConf.MongoClusterURL != "mongodb://mongodb,mongodb1,mongodb2/?replicaSet=rs0" {
+		t.Errorf("Parse(&srvConf) | MongoClusterURL = %v; want mongodb://mongodb,mongodb1,mongodb2/?replicaSet=rs0", srvConf.MongoClusterURL)
 	}
 	if srvConf.RedisPort != 6371 {
 		t.Errorf("Parse(&srvConf) | RedisPort = %v; want 6371 as int", srvConf.RedisPort)
@@ -190,8 +193,8 @@ func TestParse(t *testing.T) {
 	if srvConf.ServerPort != "8181" {
 		t.Errorf("Parse(&srvConf) | ServerPort = %v; want 8181", srvConf.ServerPort)
 	}
-	if srvConf.MongoUrl != "mongodb://localhost:76623" {
-		t.Errorf("Parse(&srvConf) | MongoUrl = %v; want mongodb://localhost:76623", srvConf.MongoUrl)
+	if srvConf.MongoURL != "mongodb://localhost:76623" {
+		t.Errorf("Parse(&srvConf) | MongoURL = %v; want mongodb://localhost:76623", srvConf.MongoURL)
 	}
 
 	os.Unsetenv("SERVER_PORT")
