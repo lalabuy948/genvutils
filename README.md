@@ -13,17 +13,17 @@
 		MongoUrl   string `genv:"MONGO_URL,mongodb://localhost:27017"`
 	}
 ```
-- `Load` will load dotenv file. You can provide file name via argument otherwise it will load dot enviroment file by priority list. First exist - first load.
-Priority list:
+- `Load` will load dotenv file. You can provide file name via argument otherwise it will load dot environment file by priority list.
+First found - first load. Priority list:
 ```sh
-.env.production.local`
-.env.test.local`
-.env.development.local`
-.env.production`
-.env.test`
-.env.development`
-.env.local`
-.env`
+.env.production.local
+.env.test.local
+.env.development.local
+.env.production
+.env.test
+.env.development
+.env.local !!! will override existing values.
+.env
 ```
 
 [example](examples/simple.go)

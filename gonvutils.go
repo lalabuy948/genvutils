@@ -139,6 +139,7 @@ func Load(filenames ...string) error {
 		}
 		filenames = append(filenames, envFileName)
 	}
+	filenames = append(filenames, ".env.local")
 	for _, filename := range filenames {
 		envMap, err := parseDotEnvFile(filename)
 		if err != nil {
