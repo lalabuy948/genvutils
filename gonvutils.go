@@ -117,8 +117,8 @@ func Parse(income interface{}) error {
 	return nil
 }
 
-//Load function is going to parse given dot environment file or chose one
-// from priority list and set environment variables.
+	//Load function is going to parse given dot environment file or chose one
+	// from priority list and set environment variables.
 //
 // !!! It will not override already set variables. Except .env.local
 //
@@ -139,7 +139,6 @@ func Load(filenames ...string) error {
 		}
 		filenames = append(filenames, envFileName)
 	}
-	filenames = append(filenames, ".env.local")
 	for _, filename := range filenames {
 		envMap, err := parseDotEnvFile(filename)
 		if err != nil {
