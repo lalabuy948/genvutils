@@ -1,6 +1,7 @@
 package genvutils
 
 import (
+	"io/ioutil"
 	"os"
 	"testing"
 )
@@ -199,4 +200,132 @@ func TestParse(t *testing.T) {
 
 	os.Unsetenv("SERVER_PORT")
 	os.Unsetenv("MONGO_URL")
+}
+
+func TestLoad(t *testing.T) {
+	if err := Load(); err != ErrDotenvNotFound {
+		t.Errorf("Load() | error %v;", err)
+	}
+
+	err := ioutil.WriteFile(".env", []byte(`
+BLA_BLA=42
+# some comment`), 0755)
+	if err != nil {
+		t.Errorf("ioutil.WriteFile | error %v;", err)
+	}
+	err = Load(".env")
+	if err != nil {
+		t.Errorf("Load() | error %v;", err)
+	}
+	got := os.Getenv("BLA_BLA")
+	if got != "42" {
+		t.Errorf("Load() | BLA_BLA = %v; want 42", got)
+	}
+	err = os.Unsetenv("BLA_BLA")
+	if err != nil {
+		t.Errorf("os.Unsetenv(BLA_BLA) | error %v;", err)
+	}
+
+	err = ioutil.WriteFile(".env.development", []byte(`
+# some comment
+BLO_BLO=42
+# another one`), 0755)
+	if err != nil {
+		t.Errorf("ioutil.WriteFile | error %v;", err)
+	}
+	err = Load(".env.development")
+	if err != nil {
+		t.Errorf("Load(.env.development) | error %v;", err)
+	}
+	got = os.Getenv("BLO_BLO")
+	if got != "42" {
+		t.Errorf("Load(.env.development) | BLO_BLO = %v; want 42", got)
+	}
+	err = os.Unsetenv("BLO_BLO")
+	if err != nil {
+		t.Errorf("os.Unsetenv(BLO_BLO) | error %v;", err)
+	}
+
+	err = ioutil.WriteFile(".env.test.local", []byte(`
+# some comment
+BLU_BLU=42 # tricky`), 0755)
+	if err != nil {
+		t.Errorf("ioutil.WriteFile | error %v;", err)
+	}
+	err = Load(".env.test.local")
+	if err != nil {
+		t.Errorf("Load(.env.test.local) | error %v;", err)
+	}
+	got = os.Getenv("BLU_BLU")
+	if got != "42" {
+		t.Errorf("Load(.env.test.local) | BLU_BLU = %v; want 42", got)
+	}
+	err = os.Unsetenv("BLU_BLU")
+	if err != nil {
+		t.Errorf("os.Unsetenv(BLU_BLU) | error %v;", err)
+	}
+
+	err = os.Remove(".env")
+	if err != nil {
+		t.Errorf("os.Remove | error %v;", err)
+	}
+	err = os.Remove(".env.development")
+	if err != nil {
+		t.Errorf("os.Remove | error %v;", err)
+	}
+	err = os.Remove(".env.test.local")
+	if err != nil {
+		t.Errorf("os.Remove(.env) | error %v;", err)
+	}
+}
+
+func TestFileExists(t *testing.T) {
+	got := fileExists("README.md")
+	if got != true {
+		t.Errorf("fileExists(README.md) = %v; want true", got)
+	}
+	got = fileExists("god.hs")
+	if got != false {
+		t.Errorf("fileExists(god.hs) = %v; want false", got)
+	}
+}
+
+func TestGetFromPriorityList(t *testing.T) {
+	got, err := getFromPriorityList()
+	if err != ErrDotenvNotFound {
+		t.Errorf("getFromPriorityList() = %v; want ErrDotenvNotFound", got)
+	}
+
+	err = ioutil.WriteFile(".env", []byte(``), 0755)
+	if err != nil {
+		t.Errorf("ioutil.WriteFile | error %v;", err)
+	}
+	err = ioutil.WriteFile(".env.local", []byte(``), 0755)
+	if err != nil {
+		t.Errorf("ioutil.WriteFile | error %v;", err)
+	}
+	err = ioutil.WriteFile(".env.production", []byte(``), 0755)
+	if err != nil {
+		t.Errorf("ioutil.WriteFile | error %v;", err)
+	}
+	got, err = getFromPriorityList()
+	if got != ".env.production" {
+		t.Errorf("getFromPriorityList() = %v; want .env.production", got)
+	}
+	if err != nil {
+		t.Errorf("getFromPriorityList() | error %v;", err)
+	}
+
+	err = os.Remove(".env")
+	if err != nil {
+		t.Errorf("os.Remove(.env) | error %v;", err)
+	}
+	err = os.Remove(".env.local")
+	if err != nil {
+		t.Errorf("os.Remove(.env.local) | error %v;", err)
+	}
+	err = os.Remove(".env.production")
+	if err != nil {
+		t.Errorf("os.Remove(.env.production) | error %v;", err)
+	}
 }
