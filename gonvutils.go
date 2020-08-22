@@ -120,17 +120,17 @@ func Parse(income interface{}) error {
 //Load function is going to parse given dot environment file or chose one
 // from priority list and set environment variables.
 //
-// !!! It will not override already set variables.
+// !!! It will not override already set variables. Except .env.local
 //
 // Priority list is next (top -> bottom):
-//.env.production.local`
-//.env.test.local`
-//.env.development.local`
-//.env.production`
-//.env.test`
-//.env.development`
-//.env.local`
-//.env`
+//.env.production.local
+//.env.test.local
+//.env.development.local
+//.env.production
+//.env.test
+//.env.development
+//.env.local !!! will override existing values.
+//.env
 func Load(filenames ...string) error {
 	if len(filenames) == 0 {
 		envFileName, err := getFromPriorityList()
@@ -145,7 +145,7 @@ func Load(filenames ...string) error {
 			return err
 		}
 		for k, v := range envMap {
-			if os.Getenv(k) == "" {
+			if os.Getenv(k) == "" || filename == ".env.local" {
 				err := os.Setenv(k,v)
 				if err != nil {
 					return err
@@ -169,9 +169,11 @@ var ErrDotenvNotFound = errors.New("genvutils: dotenv file not found")
 func getFromPriorityList() (string, error) {
 	priorityList := []string{
 		".env.production.local",
+		".env.qa.local",
 		".env.test.local",
 		".env.development.local",
 		".env.production",
+		".env.qa",
 		".env.test",
 		".env.development",
 		".env.local",
