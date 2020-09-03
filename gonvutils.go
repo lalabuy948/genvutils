@@ -225,5 +225,15 @@ func isComment(line string) bool {
 func parseLine(fullLine string) (string, string) {
 	fullLine = strings.Split(fullLine, "#")[0]
 	fullLineSplit := strings.Split(fullLine, "=")
-	return strings.TrimSpace(fullLineSplit[0]), strings.TrimSpace(strings.Join(fullLineSplit[1:], ","))
+	return strings.TrimSpace(fullLineSplit[0]), stripQuotes(strings.TrimSpace(strings.Join(fullLineSplit[1:], ",")))
+}
+
+func stripQuotes(text string) string {
+	if len(text) > 0 && (text[0] == '"' || text[0] == '\'') {
+		text = text[1:]
+	}
+	if len(text) > 0 && (text[len(text)-1] == '"' || text[len(text)-1] == '\'') {
+		text = text[:len(text)-1]
+	}
+	return text
 }

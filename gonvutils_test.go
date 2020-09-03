@@ -228,7 +228,7 @@ BLA_BLA=42
 
 	err = ioutil.WriteFile(".env.development", []byte(`
 # some comment
-BLO_BLO=42
+BLO_BLO="42"
 # another one`), 0755)
 	if err != nil {
 		t.Errorf("ioutil.WriteFile | error %v;", err)
@@ -328,4 +328,12 @@ func TestGetFromPriorityList(t *testing.T) {
 	if err != nil {
 		t.Errorf("os.Remove(.env.production) | error %v;", err)
 	}
+}
+
+func TestStripQuotes(t *testing.T) {
+	got := stripQuotes(`"bla"`)
+	if got != "bla" {
+		t.Errorf("stripQuotes(`\"bla\"`) = %v; want bla", got)
+	}
+
 }
