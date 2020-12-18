@@ -2,15 +2,16 @@ package main
 
 import (
 	"fmt"
-	"github.com/lalabuy948/genvutils"
 	"log"
+
+	"github.com/lalabuy948/genvutils"
 )
 
 type config struct {
 	ServerPort string `genv:"SERVER_PORT, 8080"` // takes 8080 if SERVER_PORT env value is null
 }
 
-func main()  {
+func main() {
 	// load dotenv file
 	err := genvutils.Load()
 	if err != genvutils.ErrDotenvNotFound {

@@ -146,7 +146,7 @@ func Load(filenames ...string) error {
 		}
 		for k, v := range envMap {
 			if os.Getenv(k) == "" || filename == ".env.local" {
-				err := os.Setenv(k,v)
+				err := os.Setenv(k, v)
 				if err != nil {
 					return err
 				}
