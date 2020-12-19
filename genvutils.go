@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-//IsProduction checks if ENVIRONMENT value is equal to "PROD".
+//IsProduction checks if ENVIRONMENT value is equal to "PROD" or "PRODUCTION".
 func IsProduction() bool {
 	if os.Getenv("ENVIRONMENT") == "PROD" {
 		return true
@@ -27,7 +27,24 @@ func IsProduction() bool {
 	return false
 }
 
-//IsDevelopment checks if ENVIRONMENT value is equal to "DEV".
+//IsStaging checks if ENVIRONMENT value is equal to "STAGE" or "STAGING".
+func IsStaging() bool {
+	if os.Getenv("ENVIRONMENT") == "STAGE" {
+		return true
+	}
+	if os.Getenv("ENVIRONMENT") == "STAGING" {
+		return true
+	}
+	if os.Getenv("APP_ENV") == "STAGE" {
+		return true
+	}
+	if os.Getenv("APP_ENV") == "STAGING" {
+		return true
+	}
+	return false
+}
+
+//IsDevelopment checks if ENVIRONMENT value is equal to "DEV" or "DEVELOPMENT".
 func IsDevelopment() bool {
 	if os.Getenv("ENVIRONMENT") == "DEV" {
 		return true
@@ -44,7 +61,7 @@ func IsDevelopment() bool {
 	return false
 }
 
-//IsTesting checks if ENVIRONMENT value is equal to "TEST".
+//IsTesting checks if ENVIRONMENT value is equal to "TEST" or "TESTING".
 func IsTesting() bool {
 	if os.Getenv("ENVIRONMENT") == "TEST" {
 		return true
@@ -164,7 +181,7 @@ func fileExists(name string) bool {
 	return !info.IsDir()
 }
 
-var ErrDotenvNotFound = errors.New("genvutils: dotenv file not found")
+var ErrDotenvNotFound = errors.New("genvutils: no dot environment files found")
 
 func getFromPriorityList() (string, error) {
 	priorityList := []string{
