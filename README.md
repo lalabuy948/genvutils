@@ -31,7 +31,3 @@ First found - first load. Priority list:
 ## Install
 
 `go get -u github.com/lalabuy948/genvutils`
-
-Donate
-
-<a href="https://www.buymeacoffee.com/lalabuy" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-blue.png" alt="Buy Me A Coffee" style="height: 30px !important;width: 100px !important;" ></a>
